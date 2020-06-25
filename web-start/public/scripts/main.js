@@ -199,6 +199,7 @@ function authStateObserver(user) {
 
     // We save the Firebase Messaging Device token and enable notifications.
     saveMessagingDeviceToken();
+    loadMessages();
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
     userNameElement.setAttribute('hidden', 'true');
@@ -303,7 +304,9 @@ function createAndInsertMessage(id, timestamp) {
 
 // Displays a Message in the UI.
 function displayMessage(id, timestamp, name, text, paquetes, picUrl, imageUrl) {
-  var div = document.getElementById(id) || createAndInsertMessage(id, timestamp);
+  
+  if (name == getUserName()){
+    var div = document.getElementById(id) || createAndInsertMessage(id, timestamp);
 
   // profile picture
   if (picUrl) {
@@ -335,6 +338,9 @@ function displayMessage(id, timestamp, name, text, paquetes, picUrl, imageUrl) {
   //messageInputElement.focus();
   paquetesInputElement.focus();
 }
+
+}
+  
 
 // Enables or disables the submit button depending on the values of the input
 // fields.
@@ -398,4 +404,4 @@ initFirebaseAuth();
 firebase.performance();
 
 // We load currently existing chat messages and listen to new ones.
-loadMessages();
+//loadMessages();

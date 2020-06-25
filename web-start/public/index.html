@@ -60,12 +60,12 @@
   <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
     <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
       <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
-        <h3><i class="material-icons">chat_bubble_outline</i> Esterilización Estoma</h3>
+        <h3><i class="material-icons">medical_services</i> Esterilización Estoma</h3>
       </div>
       <div id="user-container">
         <div hidden id="user-pic"></div>
         <div hidden id="user-name"></div>
-        <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+        <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white" onclick="location.reload()">
           Sign-out
         </button>
         <button id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
@@ -93,10 +93,10 @@
               <input class="mdl-textfield__input" type="text" id="message" autocomplete="off">
               <label class="mdl-textfield__label" for="message">Clinica...</label>
             </div>
-            
+
 
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-              <input class="mdl-textfield__input" type="text" id="paquetes" autocomplete="off">
+              <input class="mdl-textfield__input" type="number" id="paquetes" autocomplete="off">
               <label class="mdl-textfield__label" for="paquetes">No de paquetes...</label>
             </div>
 
