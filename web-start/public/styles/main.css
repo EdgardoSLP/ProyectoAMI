@@ -88,10 +88,12 @@ main, #messages-card {
   vertical-align: top;
 }
 
-.message-container .message {
+/*Se carga el Div de Paquetes donde se cargaran los mensajes que se envial desde el main.js*/
+.message-container .paquetes {
   display: table-cell;
   width: calc(100% - 40px);
   padding: 5px 0 5px 10px;
+  
 }
 
 
@@ -186,7 +188,7 @@ main, #messages-card {
   }
   #user-container {
     top: 72px;
-    background-color: rgb(3,155,229);
+    background-color: rgb(2, 124, 18);
     height: 38px;
     padding-top: 3px;
     padding-right: 2px;

@@ -52,11 +52,11 @@ function isUserSignedIn() {
 // Saves a new message to your Cloud Firestore database.
 function saveMessage(messageText,paquetesText) {
   // Add a new message entry to the database.
-  alert("Entrando a la función guardar mensaje:  "+paquetesText);
+  //alert("Entrando a la función guardar mensaje:  "+paquetesText);
   return firebase.firestore().collection('messages').add({
     name: getUserName(),
     text: messageText,
-    paquetes:paquetesText,
+    paquetes:paquetesText, /*Se agregan los datos que se cargan a la base de datos, que se obtienen desde la función onMessageFormSubmit*/
     profilePicUrl: getProfilePicUrl(),
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   }).catch(function(error) {
@@ -70,7 +70,7 @@ function loadMessages() {
   var query = firebase.firestore()
                   .collection('messages')
                   .orderBy('timestamp', 'desc')
-                  .limit(12);
+                  .limit(100);
   
   // Start listening to the query.
   query.onSnapshot(function(snapshot) {
@@ -81,6 +81,7 @@ function loadMessages() {
         var message = change.doc.data();
         displayMessage(change.doc.id, message.timestamp, message.name,
                        message.text, message.paquetes, message.profilePicUrl, message.imageUrl);
+                       /*Se envian los datos de Clinica y Paquetes a la función saveMessage en el que son enviados a la base de datos */
       }
     });
   });
@@ -113,7 +114,8 @@ function saveImageMessage(file) {
   });
 }
 
-// Saves the messaging device token to the datastore.
+/*Estas instrucciones se comentaron debido a que estaban realizando problemas al cargar la aplicación web*/
+/* Saves the messaging device token to the datastore.
 function saveMessagingDeviceToken() {
   firebase.messaging().getToken().then(function(currentToken) {
     if (currentToken) {
@@ -128,9 +130,9 @@ function saveMessagingDeviceToken() {
   }).catch(function(error){
     console.error('Unable to get messaging token.', error);
   });
-}
+}*/
 
-// Requests permission to show notifications.
+/* Requests permission to show notifications.
 function requestNotificationsPermissions() {
   console.log('Requesting notifications permission...');
   firebase.messaging().requestPermission().then(function() {
@@ -139,7 +141,7 @@ function requestNotificationsPermissions() {
   }).catch(function(error) {
     console.error('Unable to get permission to notify.', error);
   });
-}
+}*/
 
 // Triggered when a file is selected via the media picker.
 function onMediaFileSelected(event) {
@@ -169,7 +171,6 @@ function onMessageFormSubmit(e) {
   e.preventDefault();
   // Check that the user entered a message and is signed in.
   if (messageInputElement.value && checkSignedInWithMessage()) {
-    alert("Entando lines 182, previo al llamado de la F. guardar mensaje: "+ paquetesInputElement.value);
     saveMessage(messageInputElement.value, paquetesInputElement.value).then(function() {
       // Clear message text field and re-enable the SEND button.
       resetMaterialTextfield(messageInputElement, paquetesInputElement);
@@ -180,8 +181,9 @@ function onMessageFormSubmit(e) {
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
 function authStateObserver(user) {
-  if (user) { // User is signed in!
-    // Get the signed-in user's profile pic and name.
+  if (user) { /* Se crea la condición en la cual permitira que se carguen la información que corresponde
+    solo al usuario que esta logeado y cuando cierra sesión ya no aparece la información */
+    
     var profilePicUrl = getProfilePicUrl();
     var userName = getUserName();
 
@@ -198,8 +200,10 @@ function authStateObserver(user) {
     signInButtonElement.setAttribute('hidden', 'true');
 
     // We save the Firebase Messaging Device token and enable notifications.
-    saveMessagingDeviceToken();
+    //saveMessagingDeviceToken();
     loadMessages();
+    /*Cuando el usuario esta Logeado, aqui se llama a la función en la cual que mostrar sus mensajes 
+    que corresponden al usuario*/
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
     userNameElement.setAttribute('hidden', 'true');
@@ -235,10 +239,13 @@ function resetMaterialTextfield(element) {
 
 // Template for messages.
 var MESSAGE_TEMPLATE =
+    /*Se incluye en la variable, los elementos que se obtienen de la base de datos y la forma en como se
+    muestran dentro del Div que contendra los mensajes, asi como la etiquetas que permitiran identificar a
+    que pertenece cada dato que se esta cargando en la aplicacion */
     '<div class="message-container">' +
-      '<div class="spacing"><div class="pic"></div></div>' +
-      '<div class="message"></div>' +
-      '<div class="paquetes"></div>' +
+      '<div class="spacing"><div class="pic"></div></div>' + 
+      "Clinica: " + '<div class="message"></div>' +
+      "No de Paquetes: " + '<div class="paquetes"></div>' +
       '<div class="name"></div>' +
     '</div>';
 
@@ -305,6 +312,7 @@ function createAndInsertMessage(id, timestamp) {
 // Displays a Message in the UI.
 function displayMessage(id, timestamp, name, text, paquetes, picUrl, imageUrl) {
   
+  //Insertamos una condicion, para que solo se carguen los elementos que esta logueado
   if (name == getUserName()){
     var div = document.getElementById(id) || createAndInsertMessage(id, timestamp);
 
@@ -316,10 +324,12 @@ function displayMessage(id, timestamp, name, text, paquetes, picUrl, imageUrl) {
   div.querySelector('.name').textContent = name;
   var messageElement = div.querySelector('.message');
   var paquetesElement = div.querySelector('.paquetes');
+  /*Se crean la variables que almacenaran los datos que el usuario captura en los labels de la aplicación */
 
   if (text) { // If the message is text.
     messageElement.textContent = text;
     paquetesElement.textContent = paquetes;
+    /*Se asigna el valor a las variables, de los elementos que son capturados por el usuario */
 
     // Replace all line breaks by <br>.
     messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
